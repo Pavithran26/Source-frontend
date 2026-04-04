@@ -52,12 +52,37 @@ type ApiEnvelope<T> = {
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api";
 
+<<<<<<< HEAD
 async function request<T>(path: string, init?: RequestInit, token?: string): Promise<T> {
   const headers = new Headers(init?.headers);
   headers.set("Content-Type", "application/json");
 
   if (token) {
     headers.set("Authorization", `Bearer ${token}`);
+=======
+const SUMMARY_FALLBACK: AttendanceSummary = {
+  todayPresent: 0,
+  lateArrivals: 0,
+  remoteEmployees: 0,
+  attendanceRate: 0,
+};
+
+async function fetchJson<T>(path: string, fallback: T): Promise<T> {
+  try {
+    const response = await fetch(`${apiBaseUrl}${path}`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Backend responded with HTTP ${response.status} for ${path}`);
+    }
+
+    const payload = (await response.json()) as { data: T };
+    return payload.data;
+  } catch (err) {
+    console.error(`[api] fetchJson failed for "${path}":`, err);
+    return fallback;
+>>>>>>> 18427679d079300033603db81a9370ceaaaf13f2
   }
 
   const response = await fetch(`${apiBaseUrl}${path}`, {
@@ -75,6 +100,7 @@ async function request<T>(path: string, init?: RequestInit, token?: string): Pro
   return (payload as ApiEnvelope<T>).data;
 }
 
+<<<<<<< HEAD
 export const login = (input: { username: string; password: string }) =>
   request<LoginResponse>("/auth/login", {
     method: "POST",
@@ -117,3 +143,10 @@ export const createAttendance = (
     method: "POST",
     body: JSON.stringify(input)
   }, token);
+=======
+export const getAttendanceSummary = () =>
+  fetchJson<AttendanceSummary>("/attendance/summary", SUMMARY_FALLBACK);
+
+export const getAttendanceRecords = () =>
+  fetchJson<AttendanceRecord[]>("/attendance/records", []);
+>>>>>>> 18427679d079300033603db81a9370ceaaaf13f2

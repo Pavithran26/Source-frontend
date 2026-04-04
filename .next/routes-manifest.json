@@ -32,6 +32,12 @@
       "regex": "^/attendance(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/attendance(?:/)?$"
+    },
+    {
+      "page": "/employees",
+      "regex": "^/employees(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/employees(?:/)?$"
     }
   ],
   "dataRoutes": [],

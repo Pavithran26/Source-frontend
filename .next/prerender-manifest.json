@@ -1,6 +1,30 @@
 {
   "version": 4,
   "routes": {
+    "/employees": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/employees",
+      "dataRoute": "/employees.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/": {
       "experimentalBypassFor": [
         {
@@ -24,13 +48,37 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
+    },
+    "/attendance": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/attendance",
+      "dataRoute": "/attendance.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
     }
   },
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "76a161c1333479e54f5d4a33172da51b",
-    "previewModeSigningKey": "314f11ebcd8e95960e076968a0b4eebec5bdc22b32659c12da625e3ee38767a3",
-    "previewModeEncryptionKey": "11a9a1c6fa0e489971bcf074094f4e1c2c324d44694f191c7baf4253b5da20ce"
+    "previewModeId": "69e47ec9da363f7947343a650c188901",
+    "previewModeSigningKey": "c1c8a991bd2f43cb2911eff9777e387580412f507aeaa1cb461d6abd46de0368",
+    "previewModeEncryptionKey": "772019b5189ceaf7d23a3512d39c059bdbb97e6736410f543fb494951257d561"
   }
 }

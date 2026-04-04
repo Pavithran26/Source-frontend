@@ -1,5 +1,6 @@
 {
   "/_not-found/page": "/_not-found",
+  "/employees/page": "/employees",
   "/page": "/",
   "/attendance/page": "/attendance"
 }

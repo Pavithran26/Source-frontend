@@ -1,0 +1,14 @@
+
+> attendance-web@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.2.8
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.6:3000
+
+ ✓ Starting...
+ ✓ Ready in 2.2s
+ ○ Compiling /attendance ...
+ ✓ Compiled /attendance in 8.8s (658 modules)
+ GET /attendance 200 in 137ms
+ ✓ Compiled in 54ms

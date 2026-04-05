@@ -3,6 +3,7 @@
 import { startTransition, useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
+import { BrandLogo } from "../components/brand-logo";
 import { login } from "../lib/api";
 import { getStoredSession, isSessionExpired, setStoredSession } from "../lib/session";
 
@@ -17,7 +18,7 @@ export default function LoginPage() {
     const session = getStoredSession();
 
     if (session && !isSessionExpired(session)) {
-      startTransition(() => router.replace("/employees"));
+      startTransition(() => router.replace("/dashboard"));
     }
   }, [router]);
 
@@ -29,7 +30,7 @@ export default function LoginPage() {
     try {
       const session = await login({ username, password });
       setStoredSession(session);
-      startTransition(() => router.replace("/employees"));
+      startTransition(() => router.replace("/dashboard"));
     } catch (submissionError) {
       setError(submissionError instanceof Error ? submissionError.message : "Login failed");
     } finally {
@@ -40,8 +41,16 @@ export default function LoginPage() {
   return (
     <main className="login-shell login-shell-compact">
       <section className="login-panel form-panel">
+        <div className="login-brand">
+          <BrandLogo href="/" subtitle="Field-ready ERP for coconut lease, harvest, transport, and sales" />
+        </div>
+
         <div className="login-header">
-          <h1>BSZone Admin</h1>
+          <p className="eyebrow">Business workspace</p>
+          <h1>Sign in to continue</h1>
+          <p>
+            Use the same secure access for web operations today and Flutter mobile workflows later.
+          </p>
         </div>
 
         <form className="data-form" onSubmit={handleSubmit}>
@@ -63,7 +72,7 @@ export default function LoginPage() {
           {error ? <p className="form-error">{error}</p> : null}
 
           <button className="primary-button" type="submit" disabled={submitting}>
-            {submitting ? "Signing in..." : "Login"}
+            {submitting ? "Signing in..." : "Open dashboard"}
           </button>
         </form>
       </section>

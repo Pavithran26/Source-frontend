@@ -3,76 +3,152 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 
+import { BrandLogo } from "./brand-logo";
+import { UiIcon, type IconName } from "./ui-icon";
+
+type AppShellSection = "dashboard" | "employees" | "attendance";
+
 type AppShellProps = {
-  active: "employees" | "attendance";
+  active: AppShellSection;
   heading: string;
   description: string;
   userName: string;
+  userRole?: string;
+  action?: ReactNode;
   onLogout: () => void;
   children: ReactNode;
 };
+
+type NavItem = {
+  key: AppShellSection;
+  label: string;
+  href: string;
+  icon: IconName;
+};
+
+const primaryNav: NavItem[] = [
+  { key: "dashboard", label: "Dashboard", href: "/dashboard", icon: "dashboard" },
+  { key: "employees", label: "Employee Master", href: "/employees", icon: "employee" },
+  { key: "attendance", label: "Attendance", href: "/attendance", icon: "attendance" }
+];
+
+const secondaryModules: Array<{ label: string; icon: IconName }> = [
+  { label: "Land Ledger", icon: "land" },
+  { label: "Harvest Work Log", icon: "workflow" },
+  { label: "Vehicle Desk", icon: "vehicle" },
+  { label: "Sales Register", icon: "sales" },
+  { label: "Expense Book", icon: "expense" },
+  { label: "Reports", icon: "reports" }
+];
 
 export function AppShell({
   active,
   heading,
   description,
   userName,
+  userRole = "Admin",
+  action,
   onLogout,
   children
 }: AppShellProps) {
+  const todayLabel = new Intl.DateTimeFormat("en-IN", {
+    day: "2-digit",
+    month: "short",
+    weekday: "short"
+  }).format(new Date());
+
   return (
     <main className="workspace-shell">
       <aside className="workspace-sidebar">
-        <div className="brand-block">
-          <p className="brand-kicker">BSZone Admin</p>
-          <h1>BSZone</h1>
-          <p className="brand-copy">
-            Capture your real employee master data first, then mark attendance from the same records.
-          </p>
+        <div className="sidebar-top">
+          <BrandLogo />
+
+          <div className="sidebar-group">
+            <p className="sidebar-label">Operations</p>
+            <nav className="workspace-nav">
+              {primaryNav.map((item) => (
+                <Link
+                  key={item.key}
+                  className={active === item.key ? "nav-link is-active" : "nav-link"}
+                  href={item.href}
+                >
+                  <span className="nav-icon">
+                    <UiIcon height={18} name={item.icon} width={18} />
+                  </span>
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <div className="sidebar-group">
+            <p className="sidebar-label">Roadmap</p>
+            <div className="sidebar-stack">
+              {secondaryModules.map((item) => (
+                <div key={item.label} className="sidebar-item">
+                  <span className="nav-icon">
+                    <UiIcon height={18} name={item.icon} width={18} />
+                  </span>
+                  <span>{item.label}</span>
+                  <span className="sidebar-badge">Soon</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <nav className="workspace-nav">
-          <Link className={active === "employees" ? "nav-link is-active" : "nav-link"} href="/employees">
-            Employees
-          </Link>
-          <Link className={active === "attendance" ? "nav-link is-active" : "nav-link"} href="/attendance">
-            Attendance
-          </Link>
-        </nav>
-
         <div className="sidebar-footer">
-          <div>
-            <p className="footer-label">Signed in as</p>
-            <strong>{userName}</strong>
+          <div className="user-summary">
+            <div className="user-avatar">{userName.slice(0, 1).toUpperCase()}</div>
+            <div>
+              <p className="footer-label">Signed in</p>
+              <strong>{userName}</strong>
+              <p className="user-role">{userRole}</p>
+            </div>
           </div>
-          <button className="secondary-button" type="button" onClick={onLogout}>
-            Log out
+
+          <button className="logout-button" type="button" onClick={onLogout}>
+            <UiIcon height={16} name="logout" width={16} />
+            <span>Log out</span>
           </button>
         </div>
       </aside>
 
       <section className="workspace-content">
-        <header className="workspace-header">
-          <div>
-            <p className="eyebrow">BSZone workspace</p>
-            <h2>{heading}</h2>
-          </div>
-          <div className="workspace-header-actions">
-            <div className="user-chip">
-              <span className="footer-label">Signed in as</span>
-              <strong>{userName}</strong>
+        <header className="workspace-topbar">
+          <div className="topbar-title">
+            <span className="topbar-icon">
+              <UiIcon height={20} name="menu" width={20} />
+            </span>
+            <div>
+              <p className="eyebrow">Coconut operations</p>
+              <h1>{heading}</h1>
             </div>
-            <button className="secondary-button" type="button" onClick={onLogout}>
-              Log out
+          </div>
+
+          <div className="topbar-tools">
+            <div className="topbar-date">{todayLabel}</div>
+            <button className="icon-button" type="button" aria-label="Notifications">
+              <UiIcon height={18} name="bell" width={18} />
             </button>
+            <div className="profile-chip">
+              <span className="profile-avatar">{userName.slice(0, 1).toUpperCase()}</span>
+              <div>
+                <strong>{userName}</strong>
+                <span>{userRole}</span>
+              </div>
+            </div>
           </div>
         </header>
 
-        <header className="content-hero">
-          <p className="eyebrow">Operations dashboard</p>
-          <h3>{heading}</h3>
-          <p>{description}</p>
-        </header>
+        <section className="workspace-hero">
+          <div>
+            <p className="eyebrow">Field office workspace</p>
+            <h2>{heading}</h2>
+            <p>{description}</p>
+          </div>
+          {action ? <div className="workspace-hero-action">{action}</div> : null}
+        </section>
 
         {children}
       </section>

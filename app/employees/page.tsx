@@ -12,6 +12,7 @@ import { clearStoredSession } from "../../lib/session";
 import { useProtectedSession } from "../../lib/use-protected-session";
 
 const employeeTabs = [
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/employees", label: "Employee list" },
   { href: "/employees/add", label: "Add employee" }
 ];
@@ -66,12 +67,20 @@ export default function EmployeesPage() {
     return <main className="loading-screen">Checking your session...</main>;
   }
 
+  const departments = new Set(employees.map((employee) => employee.department.trim()).filter(Boolean)).size;
+
   return (
     <AppShell
       active="employees"
-      heading="Employee list"
-      description="Review, edit, and delete employee master records from a dedicated table screen."
+      heading="Employee Master"
+      description="Maintain the field workforce register that powers attendance today and future work logs, wages, and reports."
       userName={session.user.name}
+      userRole={session.user.role}
+      action={
+        <Link className="primary-button" href="/employees/add">
+          Add employee
+        </Link>
+      }
       onLogout={handleLogout}
     >
       <SectionTabs tabs={employeeTabs} />
@@ -79,13 +88,27 @@ export default function EmployeesPage() {
       <article className="panel-card">
         <div className="panel-heading">
           <div>
-            <p className="eyebrow">Employee directory</p>
-            <h3>{employees.length} employees saved</h3>
+            <p className="eyebrow">Master register</p>
+            <h3>Employee list</h3>
+            <p className="panel-description">A clean table view for crew records, contact details, and job assignment basics.</p>
           </div>
-          <div className="panel-actions">
-            <Link className="primary-button" href="/employees/add">
-              Add employee
-            </Link>
+        </div>
+
+        <div className="insight-strip">
+          <div className="insight-card">
+            <span>Registered workers</span>
+            <strong>{employees.length}</strong>
+            <p>Total saved in the master list</p>
+          </div>
+          <div className="insight-card">
+            <span>Departments</span>
+            <strong>{departments}</strong>
+            <p>Distinct work groups in the register</p>
+          </div>
+          <div className="insight-card">
+            <span>Attendance ready</span>
+            <strong>{employees.length > 0 ? "Yes" : "No"}</strong>
+            <p>Employees can be used in daily attendance</p>
           </div>
         </div>
 
@@ -95,7 +118,7 @@ export default function EmployeesPage() {
           <div className="empty-state-stack">
             <EmptyState
               title="No employees added yet"
-              description="Create your first employee in the add screen, then come back here to manage the full list."
+              description="Create your first field worker record, then manage the full list from this ERP-style register."
             />
             <Link className="secondary-button" href="/employees/add">
               Go to add employee

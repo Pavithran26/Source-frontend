@@ -57,6 +57,7 @@ export default function EditEmployeePage() {
   }, [params.id, session]);
 
   const tabs = [
+    { href: "/dashboard", label: "Dashboard" },
     { href: "/employees", label: "Employee list" },
     { href: "/employees/add", label: "Add employee" },
     { href: `/employees/${params.id}/edit`, label: "Edit employee" }
@@ -98,9 +99,10 @@ export default function EditEmployeePage() {
   return (
     <AppShell
       active="employees"
-      heading="Edit employee"
-      description="Update employee details from a dedicated edit screen."
+      heading="Edit Employee"
+      description="Update worker information without leaving the ERP workspace."
       userName={session.user.name}
+      userRole={session.user.role}
       onLogout={handleLogout}
     >
       <SectionTabs tabs={tabs} />

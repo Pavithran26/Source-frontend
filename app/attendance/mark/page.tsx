@@ -12,6 +12,7 @@ import { clearStoredSession } from "../../../lib/session";
 import { useProtectedSession } from "../../../lib/use-protected-session";
 
 const attendanceTabs = [
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/attendance", label: "Attendance list" },
   { href: "/attendance/mark", label: "Mark attendance" }
 ];
@@ -96,9 +97,10 @@ export default function MarkAttendancePage() {
   return (
     <AppShell
       active="attendance"
-      heading="Mark attendance"
-      description="Use the dedicated attendance input screen to create new attendance entries."
+      heading="Mark Attendance"
+      description="Capture crew attendance in a fast input screen built for daily field office use."
       userName={session.user.name}
+      userRole={session.user.role}
       onLogout={handleLogout}
     >
       <SectionTabs tabs={attendanceTabs} />
@@ -108,6 +110,9 @@ export default function MarkAttendancePage() {
           <div>
             <p className="eyebrow">Mark attendance</p>
             <h3>Record attendance from employee list</h3>
+            <p className="panel-description">
+              Choose a saved worker, capture timing, and keep the daily register accurate.
+            </p>
           </div>
         </div>
 
@@ -124,68 +129,88 @@ export default function MarkAttendancePage() {
             </Link>
           </div>
         ) : (
-          <form className="data-form two-column-form" onSubmit={handleSubmit}>
-            <label className="form-span-two">
-              <span>Employee</span>
-              <select value={form.employeeId} onChange={(event) => updateField("employeeId", event.target.value)} required>
-                <option value="">Select employee</option>
-                {employees.map((employee) => (
-                  <option key={employee.id} value={employee.id}>
-                    {employee.fullName} ({employee.employeeCode})
-                  </option>
-                ))}
-              </select>
-            </label>
+          <>
+            <div className="insight-strip form-insight-strip">
+              <div className="insight-card">
+                <span>Employees available</span>
+                <strong>{employees.length}</strong>
+                <p>Workers ready for attendance entry</p>
+              </div>
+              <div className="insight-card">
+                <span>Recommended flow</span>
+                <strong>Check-in first</strong>
+                <p>Capture date, time, and status in one go</p>
+              </div>
+              <div className="insight-card">
+                <span>Operational use</span>
+                <strong>Daily</strong>
+                <p>Best used as soon as crews start work</p>
+              </div>
+            </div>
 
-            <label>
-              <span>Date</span>
-              <input type="date" value={form.date} onChange={(event) => updateField("date", event.target.value)} required />
-            </label>
+            <form className="data-form two-column-form" onSubmit={handleSubmit}>
+              <label className="form-span-two">
+                <span>Employee</span>
+                <select value={form.employeeId} onChange={(event) => updateField("employeeId", event.target.value)} required>
+                  <option value="">Select employee</option>
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>
+                      {employee.fullName} ({employee.employeeCode})
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-            <label>
-              <span>Status</span>
-              <select value={form.status} onChange={(event) => updateField("status", event.target.value)} required>
-                <option value="present">Present</option>
-                <option value="late">Late</option>
-                <option value="remote">Remote</option>
-                <option value="absent">Absent</option>
-              </select>
-            </label>
+              <label>
+                <span>Date</span>
+                <input type="date" value={form.date} onChange={(event) => updateField("date", event.target.value)} required />
+              </label>
 
-            <label>
-              <span>Check-in time</span>
-              <input type="time" value={form.checkIn} onChange={(event) => updateField("checkIn", event.target.value)} required />
-            </label>
+              <label>
+                <span>Status</span>
+                <select value={form.status} onChange={(event) => updateField("status", event.target.value)} required>
+                  <option value="present">Present</option>
+                  <option value="late">Late</option>
+                  <option value="remote">Remote</option>
+                  <option value="absent">Absent</option>
+                </select>
+              </label>
 
-            <label>
-              <span>Check-out time</span>
-              <input type="time" value={form.checkOut} onChange={(event) => updateField("checkOut", event.target.value)} />
-            </label>
+              <label>
+                <span>Check-in time</span>
+                <input type="time" value={form.checkIn} onChange={(event) => updateField("checkIn", event.target.value)} required />
+              </label>
 
-            <label>
-              <span>Worked hours</span>
-              <input
-                type="number"
-                min="0"
-                max="24"
-                step="0.5"
-                value={form.workedHours}
-                onChange={(event) => updateField("workedHours", event.target.value)}
-                required
-              />
-            </label>
+              <label>
+                <span>Check-out time</span>
+                <input type="time" value={form.checkOut} onChange={(event) => updateField("checkOut", event.target.value)} />
+              </label>
 
-            <label className="form-span-two">
-              <span>Notes</span>
-              <textarea value={form.notes} onChange={(event) => updateField("notes", event.target.value)} rows={4} />
-            </label>
+              <label>
+                <span>Worked hours</span>
+                <input
+                  type="number"
+                  min="0"
+                  max="24"
+                  step="0.5"
+                  value={form.workedHours}
+                  onChange={(event) => updateField("workedHours", event.target.value)}
+                  required
+                />
+              </label>
 
-            {formError ? <p className="form-error form-span-two">{formError}</p> : null}
+              <label className="form-span-two">
+                <span>Notes</span>
+                <textarea value={form.notes} onChange={(event) => updateField("notes", event.target.value)} rows={4} />
+              </label>
 
-            <button className="primary-button form-span-two" type="submit" disabled={saving}>
-              {saving ? "Saving attendance..." : "Save attendance"}
-            </button>
-          </form>
+              {formError ? <p className="form-error form-span-two">{formError}</p> : null}
+
+              <button className="primary-button form-span-two" type="submit" disabled={saving}>
+                {saving ? "Saving attendance..." : "Save attendance"}
+              </button>
+            </form>
+          </>
         )}
       </article>
     </AppShell>

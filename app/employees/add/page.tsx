@@ -11,6 +11,7 @@ import { clearStoredSession } from "../../../lib/session";
 import { useProtectedSession } from "../../../lib/use-protected-session";
 
 const employeeTabs = [
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/employees", label: "Employee list" },
   { href: "/employees/add", label: "Add employee" }
 ];
@@ -68,9 +69,10 @@ export default function AddEmployeePage() {
   return (
     <AppShell
       active="employees"
-      heading="Add employee"
-      description="Use the dedicated form screen to create a new employee record."
+      heading="Add Employee"
+      description="Create a clean master record for field staff before using them in attendance and future work logs."
       userName={session.user.name}
+      userRole={session.user.role}
       onLogout={handleLogout}
     >
       <SectionTabs tabs={employeeTabs} />

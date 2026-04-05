@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { AppShell } from "../../components/app-shell";
 import { EmptyState } from "../../components/empty-state";
 import { SectionTabs } from "../../components/section-tabs";
-import { StatsCard } from "../../components/stats-card";
 import {
   getAttendanceRecords,
   getAttendanceSummary,
@@ -25,6 +24,7 @@ const emptySummary: AttendanceSummary = {
 };
 
 const attendanceTabs = [
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/attendance", label: "Attendance list" },
   { href: "/attendance/mark", label: "Mark attendance" }
 ];
@@ -67,33 +67,55 @@ export default function AttendancePage() {
     return <main className="loading-screen">Checking your session...</main>;
   }
 
+  const totalWorkedHours = records.reduce((sum, record) => sum + record.workedHours, 0);
+
   return (
     <AppShell
       active="attendance"
-      heading="Attendance list"
-      description="Use the dedicated list screen to review attendance in a full table view."
+      heading="Attendance Register"
+      description="Review crew presence, timings, and worked hours in one table-first view suited for daily operations."
       userName={session.user.name}
+      userRole={session.user.role}
+      action={
+        <Link className="primary-button" href="/attendance/mark">
+          Mark attendance
+        </Link>
+      }
       onLogout={handleLogout}
     >
       <SectionTabs tabs={attendanceTabs} />
 
-      <section className="stats-grid">
-        <StatsCard label="Present today" value={String(summary.todayPresent)} helper="Present, late, and remote combined" />
-        <StatsCard label="Late arrivals" value={String(summary.lateArrivals)} helper="Employees marked late today" />
-        <StatsCard label="Remote" value={String(summary.remoteEmployees)} helper="Employees working off-site today" />
-        <StatsCard label="Attendance rate" value={`${summary.attendanceRate}%`} helper="Rate calculated from today's marked records" />
-      </section>
-
       <article className="panel-card">
         <div className="panel-heading">
           <div>
-            <p className="eyebrow">Attendance log</p>
-            <h3>{records.length} attendance entries</h3>
+            <p className="eyebrow">Daily attendance</p>
+            <h3>Attendance list</h3>
+            <p className="panel-description">A single operational register for who came, when they checked in, and how long they worked.</p>
           </div>
-          <div className="panel-actions">
-            <Link className="primary-button" href="/attendance/mark">
-              Mark attendance
-            </Link>
+        </div>
+
+        <div className="insight-strip">
+          <div className="insight-card">
+            <span>Present today</span>
+            <strong>{summary.todayPresent}</strong>
+            <p>Marked available or working today</p>
+          </div>
+          <div className="insight-card">
+            <span>Late / remote</span>
+            <strong>
+              {summary.lateArrivals} / {summary.remoteEmployees}
+            </strong>
+            <p>Special attendance states</p>
+          </div>
+          <div className="insight-card">
+            <span>Worked hours</span>
+            <strong>{totalWorkedHours.toFixed(1)}</strong>
+            <p>Total recorded time in this register</p>
+          </div>
+          <div className="insight-card">
+            <span>Attendance rate</span>
+            <strong>{summary.attendanceRate}%</strong>
+            <p>Percentage from today's attendance entries</p>
           </div>
         </div>
 
@@ -103,7 +125,7 @@ export default function AttendancePage() {
           <div className="empty-state-stack">
             <EmptyState
               title="No attendance saved yet"
-              description="Use the mark attendance screen to add entries, then review them here in the table view."
+              description="Use the mark attendance screen to add daily entries, then review them here in the main operational register."
             />
             <Link className="secondary-button" href="/attendance/mark">
               Go to mark attendance

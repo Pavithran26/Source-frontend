@@ -66,6 +66,12 @@ textarea {
   padding: 28px 0;
 }
 
+.login-shell-compact {
+  width: min(520px, calc(100% - 32px));
+  grid-template-columns: 1fr;
+  place-items: center;
+}
+
 .login-panel,
 .panel-card,
 .stats-card,
@@ -80,6 +86,10 @@ textarea {
 .login-panel {
   border-radius: 30px;
   padding: 32px;
+}
+
+.login-shell-compact .login-panel {
+  width: 100%;
 }
 
 .intro-panel h1 {

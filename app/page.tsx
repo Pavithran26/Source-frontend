@@ -38,34 +38,10 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="login-shell">
-      <section className="login-panel intro-panel">
-        <p className="eyebrow">BSZone workspace</p>
-        <h1>Manage employees first. Track attendance from the same live records.</h1>
-        <p>
-          This admin console is designed for manual entry. No sample employees or sample attendance rows are shown.
-        </p>
-        <div className="intro-notes">
-          <div>
-            <span>Employees</span>
-            <strong>Basic required profile capture</strong>
-          </div>
-          <div>
-            <span>Attendance</span>
-            <strong>Marks only against saved employees</strong>
-          </div>
-          <div>
-            <span>Security</span>
-            <strong>Credentials validated against the database</strong>
-          </div>
-        </div>
-      </section>
-
+    <main className="login-shell login-shell-compact">
       <section className="login-panel form-panel">
         <div className="login-header">
-          <p className="eyebrow">Admin login</p>
-          <h2>Sign in to continue</h2>
-          <p>Only the configured database credential is allowed.</p>
+          <h1>BSZone Admin</h1>
         </div>
 
         <form className="data-form" onSubmit={handleSubmit}>

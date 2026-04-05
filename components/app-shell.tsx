@@ -52,9 +52,25 @@ export function AppShell({
       </aside>
 
       <section className="workspace-content">
+        <header className="workspace-header">
+          <div>
+            <p className="eyebrow">BSZone workspace</p>
+            <h2>{heading}</h2>
+          </div>
+          <div className="workspace-header-actions">
+            <div className="user-chip">
+              <span className="footer-label">Signed in as</span>
+              <strong>{userName}</strong>
+            </div>
+            <button className="secondary-button" type="button" onClick={onLogout}>
+              Log out
+            </button>
+          </div>
+        </header>
+
         <header className="content-hero">
           <p className="eyebrow">Operations dashboard</p>
-          <h2>{heading}</h2>
+          <h3>{heading}</h3>
           <p>{description}</p>
         </header>
 

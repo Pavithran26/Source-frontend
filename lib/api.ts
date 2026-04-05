@@ -50,7 +50,11 @@ type ApiEnvelope<T> = {
   data: T;
 };
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000/api";
+const apiBaseUrl =
+  process.env.NEXT_PUBLIC_API_BASE_URL ??
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:4000/api"
+    : "https://source-backend-django.vercel.app/api");
 
 async function request<T>(path: string, init?: RequestInit, token?: string): Promise<T> {
   const headers = new Headers(init?.headers);

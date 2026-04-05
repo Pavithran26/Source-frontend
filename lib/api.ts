@@ -50,6 +50,18 @@ type ApiEnvelope<T> = {
   data: T;
 };
 
+function parsePayload(text: string) {
+  if (!text) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(text) as ApiEnvelope<unknown> | { message?: string };
+  } catch {
+    return null;
+  }
+}
+
 const apiBaseUrl =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
   (process.env.NODE_ENV === "development"
@@ -70,10 +82,22 @@ async function request<T>(path: string, init?: RequestInit, token?: string): Pro
     cache: "no-store"
   });
 
-  const payload = (await response.json()) as ApiEnvelope<T> | { message?: string };
+  const raw = await response.text();
+  const payload = parsePayload(raw);
 
   if (!response.ok) {
-    throw new Error("message" in payload && payload.message ? payload.message : "Request failed");
+    const message =
+      payload && "message" in payload && payload.message
+        ? payload.message
+        : raw.trim().startsWith("<")
+          ? `Request failed (${response.status})`
+          : raw || "Request failed";
+
+    throw new Error(message);
+  }
+
+  if (!payload || !("data" in payload)) {
+    throw new Error("Invalid server response");
   }
 
   return (payload as ApiEnvelope<T>).data;
@@ -96,6 +120,27 @@ export const createEmployee = (token: string, input: Omit<Employee, "id">) =>
     {
       method: "POST",
       body: JSON.stringify(input)
+    },
+    token
+  );
+
+export const getEmployee = (token: string, id: string) => request<Employee>(`/employees/${id}`, undefined, token);
+
+export const updateEmployee = (token: string, id: string, input: Omit<Employee, "id">) =>
+  request<Employee>(
+    `/employees/${id}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(input)
+    },
+    token
+  );
+
+export const deleteEmployee = (token: string, id: string) =>
+  request<{ id: string }>(
+    `/employees/${id}`,
+    {
+      method: "DELETE"
     },
     token
   );

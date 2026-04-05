@@ -1,32 +1,27 @@
 "use client";
 
-import { startTransition, useEffect, useState, type FormEvent } from "react";
+import { startTransition, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { AppShell } from "../../components/app-shell";
 import { EmptyState } from "../../components/empty-state";
-import { createEmployee, getEmployees, type Employee } from "../../lib/api";
+import { SectionTabs } from "../../components/section-tabs";
+import { deleteEmployee, getEmployees, type Employee } from "../../lib/api";
 import { clearStoredSession } from "../../lib/session";
 import { useProtectedSession } from "../../lib/use-protected-session";
 
-const initialForm = {
-  employeeCode: "",
-  fullName: "",
-  department: "",
-  designation: "",
-  email: "",
-  phoneNumber: "",
-  joinedOn: ""
-};
+const employeeTabs = [
+  { href: "/employees", label: "Employee list" },
+  { href: "/employees/add", label: "Add employee" }
+];
 
 export default function EmployeesPage() {
   const router = useRouter();
   const { loading, session } = useProtectedSession();
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [form, setForm] = useState(initialForm);
   const [pageError, setPageError] = useState("");
-  const [formError, setFormError] = useState("");
-  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState("");
 
   useEffect(() => {
     if (!session) {
@@ -35,8 +30,7 @@ export default function EmployeesPage() {
 
     const loadEmployees = async () => {
       try {
-        const items = await getEmployees(session.token);
-        setEmployees(items);
+        setEmployees(await getEmployees(session.token));
       } catch (error) {
         setPageError(error instanceof Error ? error.message : "Unable to load employees");
       }
@@ -45,33 +39,26 @@ export default function EmployeesPage() {
     void loadEmployees();
   }, [session]);
 
-  const updateField = (field: keyof typeof initialForm, value: string) => {
-    setForm((current) => ({ ...current, [field]: value }));
-  };
-
   const handleLogout = () => {
     clearStoredSession();
     startTransition(() => router.replace("/"));
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!session) {
+  const handleDelete = async (employee: Employee) => {
+    if (!session || !window.confirm(`Delete ${employee.fullName}?`)) {
       return;
     }
 
-    setSaving(true);
-    setFormError("");
+    setDeletingId(employee.id);
+    setPageError("");
 
     try {
-      const created = await createEmployee(session.token, form);
-      setEmployees((current) => [created, ...current]);
-      setForm(initialForm);
+      await deleteEmployee(session.token, employee.id);
+      setEmployees((current) => current.filter((item) => item.id !== employee.id));
     } catch (error) {
-      setFormError(error instanceof Error ? error.message : "Unable to save employee");
+      setPageError(error instanceof Error ? error.message : "Unable to delete employee");
     } finally {
-      setSaving(false);
+      setDeletingId("");
     }
   };
 
@@ -82,107 +69,87 @@ export default function EmployeesPage() {
   return (
     <AppShell
       active="employees"
-      heading="Employee registry"
-      description="Add the basic employee details you want to maintain. The attendance screen will use only these saved employees."
+      heading="Employee list"
+      description="Review, edit, and delete employee master records from a dedicated table screen."
       userName={session.user.name}
       onLogout={handleLogout}
     >
-      <section className="content-grid">
-        <article className="panel-card form-card">
-          <div className="panel-heading">
-            <div>
-              <p className="eyebrow">Create employee</p>
-              <h3>Basic required details</h3>
-            </div>
+      <SectionTabs tabs={employeeTabs} />
+
+      <article className="panel-card">
+        <div className="panel-heading">
+          <div>
+            <p className="eyebrow">Employee directory</p>
+            <h3>{employees.length} employees saved</h3>
           </div>
-
-          <form className="data-form two-column-form" onSubmit={handleSubmit}>
-            <label>
-              <span>Employee code</span>
-              <input value={form.employeeCode} onChange={(event) => updateField("employeeCode", event.target.value)} required />
-            </label>
-            <label>
-              <span>Full name</span>
-              <input value={form.fullName} onChange={(event) => updateField("fullName", event.target.value)} required />
-            </label>
-            <label>
-              <span>Department</span>
-              <input value={form.department} onChange={(event) => updateField("department", event.target.value)} required />
-            </label>
-            <label>
-              <span>Designation</span>
-              <input value={form.designation} onChange={(event) => updateField("designation", event.target.value)} required />
-            </label>
-            <label>
-              <span>Email</span>
-              <input type="email" value={form.email} onChange={(event) => updateField("email", event.target.value)} required />
-            </label>
-            <label>
-              <span>Phone number</span>
-              <input value={form.phoneNumber} onChange={(event) => updateField("phoneNumber", event.target.value)} required />
-            </label>
-            <label>
-              <span>Joined date</span>
-              <input type="date" value={form.joinedOn} onChange={(event) => updateField("joinedOn", event.target.value)} required />
-            </label>
-
-            {formError ? <p className="form-error form-span-two">{formError}</p> : null}
-
-            <button className="primary-button form-span-two" type="submit" disabled={saving}>
-              {saving ? "Saving employee..." : "Add employee"}
-            </button>
-          </form>
-        </article>
-
-        <article className="panel-card">
-          <div className="panel-heading">
-            <div>
-              <p className="eyebrow">Employee list</p>
-              <h3>{employees.length} employees saved</h3>
-            </div>
+          <div className="panel-actions">
+            <Link className="primary-button" href="/employees/add">
+              Add employee
+            </Link>
           </div>
+        </div>
 
-          {pageError ? <p className="form-error">{pageError}</p> : null}
+        {pageError ? <p className="form-error">{pageError}</p> : null}
 
-          {employees.length === 0 ? (
+        {employees.length === 0 ? (
+          <div className="empty-state-stack">
             <EmptyState
               title="No employees added yet"
-              description="Add your first employee from the form on the left. Attendance marking will become available after that."
+              description="Create your first employee in the add screen, then come back here to manage the full list."
             />
-          ) : (
-            <div className="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Employee</th>
-                    <th>Department</th>
-                    <th>Designation</th>
-                    <th>Contact</th>
-                    <th>Joined</th>
+            <Link className="secondary-button" href="/employees/add">
+              Go to add employee
+            </Link>
+          </div>
+        ) : (
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Department</th>
+                  <th>Designation</th>
+                  <th>Contact</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {employees.map((employee) => (
+                  <tr key={employee.id}>
+                    <td>
+                      <strong>{employee.fullName}</strong>
+                      <span>{employee.employeeCode}</span>
+                    </td>
+                    <td>{employee.department}</td>
+                    <td>{employee.designation}</td>
+                    <td>
+                      <strong>{employee.email}</strong>
+                      <span>{employee.phoneNumber}</span>
+                    </td>
+                    <td>{employee.joinedOn}</td>
+                    <td>
+                      <div className="table-actions">
+                        <Link className="secondary-button table-button" href={`/employees/${employee.id}/edit`}>
+                          Edit
+                        </Link>
+                        <button
+                          className="danger-button table-button"
+                          type="button"
+                          disabled={deletingId === employee.id}
+                          onClick={() => handleDelete(employee)}
+                        >
+                          {deletingId === employee.id ? "Deleting..." : "Delete"}
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {employees.map((employee) => (
-                    <tr key={employee.id}>
-                      <td>
-                        <strong>{employee.fullName}</strong>
-                        <span>{employee.employeeCode}</span>
-                      </td>
-                      <td>{employee.department}</td>
-                      <td>{employee.designation}</td>
-                      <td>
-                        <strong>{employee.email}</strong>
-                        <span>{employee.phoneNumber}</span>
-                      </td>
-                      <td>{employee.joinedOn}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </article>
-      </section>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </article>
     </AppShell>
   );
 }

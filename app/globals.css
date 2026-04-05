@@ -163,6 +163,25 @@ label span,
   margin-top: 24px;
 }
 
+.section-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.section-tab {
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(30, 36, 48, 0.1);
+  background: rgba(255, 255, 255, 0.45);
+  font-family: Arial, sans-serif;
+}
+
+.section-tab.is-active {
+  background: linear-gradient(135deg, rgba(188, 91, 49, 0.16), rgba(31, 93, 107, 0.12));
+  border-color: rgba(188, 91, 49, 0.24);
+}
+
 .two-column-form {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -341,6 +360,48 @@ textarea {
   gap: 12px;
 }
 
+.panel-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.empty-state-stack {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.table-button {
+  padding: 10px 14px;
+}
+
+.danger-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 18px;
+  cursor: pointer;
+  color: #fff7f2;
+  background: linear-gradient(135deg, #c05542 0%, #8d2d20 100%);
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.danger-button:hover {
+  transform: translateY(-1px);
+}
+
+.danger-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -482,5 +543,14 @@ td span {
   .two-column-form,
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .panel-actions {
+    width: 100%;
+  }
+
+  .section-tabs,
+  .table-actions {
+    flex-direction: column;
   }
 }

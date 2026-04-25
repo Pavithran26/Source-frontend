@@ -10,7 +10,7 @@ type BrandLogoProps = {
 export function BrandLogo({
   href = "/dashboard",
   subtitle = "Lease, harvest, transport, and sales control",
-  title = "BSZone Coconut ERP"
+  title = "srk Coconut ERP"
 }: BrandLogoProps) {
   return (
     <Link className="brand-logo" href={href}>

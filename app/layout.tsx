@@ -15,7 +15,7 @@ const displayFont = Cormorant_Garamond({
 });
 
 export const metadata = {
-  title: "BSZone Coconut ERP",
+  title: "srk Coconut ERP",
   description: "Operations dashboard for coconut harvesting and trading"
 };
 

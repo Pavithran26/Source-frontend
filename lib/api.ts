@@ -539,7 +539,7 @@ export const getLands = async (token: string, params?: Record<string, string | n
 
 export const createLand = async (
   token: string,
-  input: Omit<Land, "id" | "ownerName">
+  input: Omit<Land, "id" | "ownerName" | "totalPaid" | "balanceDue">
 ) => {
   const payload = await request<Record<string, unknown>>(
     "/lands",

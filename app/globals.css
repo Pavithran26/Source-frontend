@@ -16,6 +16,32 @@
   --danger: #b04d36;
   --danger-deep: #8b3422;
   --shadow: 0 24px 60px rgba(43, 66, 56, 0.11);
+  --body-gradient-top: #f9faf6;
+  --bg-accent-glow: rgba(107, 184, 204, 0.2);
+  --bg-brand-glow: rgba(33, 102, 73, 0.16);
+}
+
+[data-theme='dark'] {
+  --bg: #0a0f0d;
+  --bg-soft: #0e1613;
+  --surface: rgba(18, 30, 26, 0.9);
+  --surface-strong: #162520;
+  --surface-muted: #1a2c26;
+  --line: rgba(220, 239, 228, 0.08);
+  --line-strong: rgba(220, 239, 228, 0.14);
+  --text: #e1ece6;
+  --muted: #8ea59b;
+  --brand: #48d39c;
+  --brand-deep: #5cf5b8;
+  --brand-soft: rgba(33, 102, 73, 0.3);
+  --accent: #7dd3e8;
+  --accent-soft: rgba(107, 184, 204, 0.12);
+  --danger: #d96d55;
+  --danger-deep: #ff8e75;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  --body-gradient-top: #0d1613;
+  --bg-accent-glow: rgba(125, 211, 232, 0.12);
+  --bg-brand-glow: rgba(72, 211, 156, 0.1);
 }
 
 * {
@@ -31,9 +57,9 @@ body {
   margin: 0;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(107, 184, 204, 0.2), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(33, 102, 73, 0.16), transparent 28%),
-    linear-gradient(180deg, #f9faf6 0%, var(--bg) 100%);
+    radial-gradient(circle at top left, var(--bg-accent-glow), transparent 24%),
+    radial-gradient(circle at bottom right, var(--bg-brand-glow), transparent 28%),
+    linear-gradient(180deg, var(--body-gradient-top) 0%, var(--bg) 100%);
   font-family: var(--font-ui), "Trebuchet MS", sans-serif;
 }
 

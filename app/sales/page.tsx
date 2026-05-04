@@ -180,9 +180,9 @@ export default function SalesPage() {
               header: "Actions",
               render: (entry) => (
                 <div className="table-actions">
-                  <button className="secondary-button table-button" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem" }}>
+                  <Link href={`/sales/${entry.id}/edit`} className="secondary-button table-button" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem" }}>
                     <FaEdit size={16} />
-                  </button>
+                  </Link>
                   <button
                     className="danger-button table-button"
                     type="button"

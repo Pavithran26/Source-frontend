@@ -8,7 +8,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { UiIcon, type IconName } from "./ui-icon";
 import { getStoredSession } from "../lib/session";
 
-type AppShellSection = "dashboard" | "lands" | "employees" | "vehicles" | "worklogs" | "sales" | "attendance";
+type AppShellSection = "dashboard" | "lands" | "employees" | "vehicles" | "worklogs" | "sales" | "attendance" | "stores" | "grns";
 
 type AppShellProps = {
   active: AppShellSection;
@@ -34,7 +34,9 @@ const primaryNav: NavItem[] = [
   { key: "employees", label: "Employees", href: "/employees", icon: "employee" },
   { key: "vehicles", label: "Vehicles", href: "/vehicles", icon: "vehicle" },
   { key: "worklogs", label: "Work Logs", href: "/worklogs", icon: "workflow" },
-  { key: "sales", label: "Sales", href: "/sales", icon: "sales" }
+  { key: "sales", label: "Sales", href: "/sales", icon: "sales" },
+  { key: "stores", label: "Stores/Hubs", href: "/stores", icon: "dashboard" },
+  { key: "grns", label: "Receipts (GRN)", href: "/grns", icon: "workflow" }
 ];
 
 const secondaryModules: Array<{ label: string; icon: IconName }> = [

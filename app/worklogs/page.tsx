@@ -120,11 +120,21 @@ export default function WorkLogsPage() {
           </div>
         </div>
 
-        <div className="insight-strip">
-          <div className="insight-card">
+        <div className="insight-strip" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+          <div className="insight-card highlight-card">
             <span>Logs saved</span>
             <strong>{worklogs.length}</strong>
             <p>Harvest jobs already captured</p>
+          </div>
+          <div className="insight-card">
+            <span>Total Coconuts</span>
+            <strong>{worklogs.reduce((acc, log) => acc + (log.coconutCount || 0), 0).toLocaleString()}</strong>
+            <p>From displayed logs</p>
+          </div>
+          <div className="insight-card">
+            <span>Transport Expenses</span>
+            <strong>₹ {worklogs.reduce((acc, log) => acc + (log.transportCost || 0), 0).toLocaleString()}</strong>
+            <p>From displayed logs</p>
           </div>
         </div>
 
@@ -147,11 +157,14 @@ export default function WorkLogsPage() {
           columns={[
             { header: "Date", accessor: "workDate" },
             {
-              header: "Land",
+              header: "Land & Time",
               render: (worklog) => (
                 <>
                   <strong>{worklog.landName}</strong>
-                  <span>{worklog.notes || "Work log entry"}</span>
+                  <span style={{ fontSize: "0.85em" }}>
+                    {worklog.startTime || "--:--"} to {worklog.endTime || "--:--"}
+                  </span>
+                  {worklog.notes && <span>{worklog.notes}</span>}
                 </>
               )
             },
@@ -160,8 +173,13 @@ export default function WorkLogsPage() {
               render: (worklog) => worklog.supervisorName || "Not assigned"
             },
             {
-              header: "Vehicle",
-              render: (worklog) => worklog.vehicleName || "No vehicle"
+              header: "Transport & Location",
+              render: (worklog) => (
+                <>
+                  <div>{worklog.vehicleName || "No vehicle"}</div>
+                  {worklog.location && <span style={{ fontSize: "0.85em", color: "var(--color-neutral-600)" }}>{worklog.location}</span>}
+                </>
+              )
             },
             {
               header: "Harvest",
@@ -180,9 +198,9 @@ export default function WorkLogsPage() {
               header: "Actions",
               render: (worklog) => (
                 <div className="table-actions">
-                  <button className="secondary-button table-button" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem" }}>
+                  <Link href={`/worklogs/${worklog.id}/edit`} className="secondary-button table-button" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem", textDecoration: "none" }}>
                     <FaEdit size={16} />
-                  </button>
+                  </Link>
                   <button
                     className="danger-button table-button"
                     type="button"

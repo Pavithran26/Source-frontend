@@ -109,8 +109,35 @@ export type WorkLog = {
   bagCount: number;
   latitude: number | null;
   longitude: number | null;
+  startTime: string | null;
+  endTime: string | null;
+  loadType: "lease load" | "Direct Load" | null;
+  transportCost: number | null;
+  location: string | null;
   notes: string;
   assignments: WorkLogAssignment[];
+};
+
+export type Store = {
+  id: string;
+  name: string;
+  location: string;
+  currentCoconuts: number;
+  currentBags: number;
+  isActive: boolean;
+  notes: string;
+};
+
+export type GRN = {
+  id: string;
+  storeId: string;
+  storeName: string;
+  worklogId: string | null;
+  receiptDate: string;
+  coconutCount: number;
+  bagCount: number;
+  vehicleId: string | null;
+  notes: string;
 };
 
 export type Buyer = {
@@ -429,6 +456,11 @@ function mapWorkLog(item: Record<string, unknown>): WorkLog {
     bagCount: Number(item.bag_count ?? 0),
     latitude: item.latitude == null ? null : Number(item.latitude),
     longitude: item.longitude == null ? null : Number(item.longitude),
+    startTime: item.start_time ? String(item.start_time) : null,
+    endTime: item.end_time ? String(item.end_time) : null,
+    loadType: item.load_type ? String(item.load_type) as "lease load" | "Direct Load" : null,
+    transportCost: item.transport_cost == null ? null : Number(item.transport_cost),
+    location: item.location ? String(item.location) : null,
     notes: String(item.notes ?? ""),
     assignments: assignments.map((assignment) => {
       const entry = assignment as Record<string, unknown>;
@@ -442,6 +474,33 @@ function mapWorkLog(item: Record<string, unknown>): WorkLog {
         unitsCompleted: Number(entry.units_completed ?? 0)
       };
     })
+  };
+}
+
+function mapStore(item: Record<string, unknown>): Store {
+  return {
+    id: String(item.id ?? ""),
+    name: String(item.name ?? ""),
+    location: String(item.location ?? ""),
+    currentCoconuts: Number(item.current_coconuts ?? 0),
+    currentBags: Number(item.current_bags ?? 0),
+    isActive: Boolean(item.is_active ?? True),
+    notes: String(item.notes ?? "")
+  };
+}
+
+function mapGRN(item: Record<string, unknown>): GRN {
+  const store = (item.store ?? {}) as Record<string, unknown>;
+  return {
+    id: String(item.id ?? ""),
+    storeId: String(store.id ?? ""),
+    storeName: String(store.name ?? ""),
+    worklogId: item.worklog_id ? String(item.worklog_id) : null,
+    receiptDate: String(item.receipt_date ?? ""),
+    coconutCount: Number(item.coconut_count ?? 0),
+    bagCount: Number(item.bag_count ?? 0),
+    vehicleId: item.vehicle_id ? String(item.vehicle_id) : null,
+    notes: String(item.notes ?? "")
   };
 }
 
@@ -741,6 +800,11 @@ export const createWorkLog = async (
     workerIds: string[];
     latitude?: number | null;
     longitude?: number | null;
+    startTime?: string | null;
+    endTime?: string | null;
+    loadType?: "lease load" | "Direct Load" | null;
+    transportCost?: number | null;
+    location?: string | null;
     notes?: string;
   }
 ) => {
@@ -758,11 +822,69 @@ export const createWorkLog = async (
         worker_ids: input.workerIds.map((id) => Number(id)),
         latitude: input.latitude ?? null,
         longitude: input.longitude ?? null,
+        start_time: input.startTime ?? null,
+        end_time: input.endTime ?? null,
+        load_type: input.loadType ?? null,
+        transport_cost: input.transportCost ?? null,
+        location: input.location ?? null,
         notes: input.notes ?? ""
       })
     },
     token
   );
+  return mapWorkLog(payload);
+};
+
+export const updateWorkLog = async (
+  token: string,
+  id: string,
+  input: {
+    workDate: string;
+    landId: string;
+    supervisorId?: string;
+    vehicleId?: string;
+    coconutCount: number;
+    bagCount: number;
+    workerIds: string[];
+    latitude?: number | null;
+    longitude?: number | null;
+    startTime?: string | null;
+    endTime?: string | null;
+    loadType?: "lease load" | "Direct Load" | null;
+    transportCost?: number | null;
+    location?: string | null;
+    notes?: string;
+  }
+) => {
+  const payload = await request<Record<string, unknown>>(
+    `/worklogs/${id}`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        work_date: input.workDate,
+        land_id: input.landId,
+        supervisor_id: input.supervisorId || null,
+        vehicle_id: input.vehicleId || null,
+        coconut_count: input.coconutCount,
+        bag_count: input.bagCount,
+        worker_ids: input.workerIds.map((wId) => Number(wId)),
+        latitude: input.latitude ?? null,
+        longitude: input.longitude ?? null,
+        start_time: input.startTime ?? null,
+        end_time: input.endTime ?? null,
+        load_type: input.loadType ?? null,
+        transport_cost: input.transportCost ?? null,
+        location: input.location ?? null,
+        notes: input.notes ?? ""
+      })
+    },
+    token
+  );
+  return mapWorkLog(payload);
+};
+
+export const getWorkLog = async (token: string, id: string) => {
+  const payload = await request<Record<string, unknown>>(`/worklogs/${id}`, undefined, token);
   return mapWorkLog(payload);
 };
 
@@ -824,6 +946,110 @@ export const createSalesEntry = async (
   );
   return mapSalesEntry(payload);
 };
+
+export const getStores = async (token: string, params?: Record<string, string | number>) =>
+  (await listRequest<Record<string, unknown>>("/stores", token, params)).map(mapStore);
+
+export const createStore = async (
+  token: string,
+  input: Omit<Store, "id" | "currentCoconuts" | "currentBags">
+) => {
+  const payload = await request<Record<string, unknown>>(
+    "/stores",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        name: input.name,
+        location: input.location,
+        is_active: input.isActive,
+        notes: input.notes
+      })
+    },
+    token
+  );
+  return mapStore(payload);
+};
+
+export const updateStore = async (token: string, id: string, input: Omit<Store, "id" | "currentCoconuts" | "currentBags">) => {
+  const payload = await request<Record<string, unknown>>(
+    `/stores/${id}`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        name: input.name,
+        location: input.location,
+        is_active: input.isActive,
+        notes: input.notes
+      })
+    },
+    token
+  );
+  return mapStore(payload);
+};
+
+export const deleteStore = (token: string, id: string) =>
+  request<{ id: string }>(
+    `/stores/${id}/`,
+    {
+      method: "DELETE"
+    },
+    token
+  );
+
+export const getGRNs = async (token: string, params?: Record<string, string | number>) =>
+  (await listRequest<Record<string, unknown>>("/grns", token, params)).map(mapGRN);
+
+export const createGRN = async (
+  token: string,
+  input: Omit<GRN, "id" | "storeName">
+) => {
+  const payload = await request<Record<string, unknown>>(
+    "/grns",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        store_id: input.storeId,
+        worklog_id: input.worklogId || null,
+        receipt_date: input.receiptDate,
+        coconut_count: input.coconutCount,
+        bag_count: input.bagCount,
+        vehicle_id: input.vehicleId || null,
+        notes: input.notes
+      })
+    },
+    token
+  );
+  return mapGRN(payload);
+};
+
+export const updateGRN = async (token: string, id: string, input: Omit<GRN, "id" | "storeName">) => {
+  const payload = await request<Record<string, unknown>>(
+    `/grns/${id}`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        store_id: input.storeId,
+        worklog_id: input.worklogId || null,
+        receipt_date: input.receiptDate,
+        coconut_count: input.coconutCount,
+        bag_count: input.bagCount,
+        vehicle_id: input.vehicleId || null,
+        notes: input.notes
+      })
+    },
+    token
+  );
+  return mapGRN(payload);
+};
+
+export const deleteGRN = (token: string, id: string) =>
+  request<{ id: string }>(
+    `/grns/${id}/`,
+    {
+      method: "DELETE"
+    },
+    token
+  );
 
 // Legacy compatibility while the old attendance workflow remains in the repo.
 export const getAttendanceSummary = (token: string) =>

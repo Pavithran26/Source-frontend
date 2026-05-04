@@ -1,21 +1,22 @@
 "use client";
 
 import { startTransition, useEffect, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
-import { AppShell } from "../../../components/app-shell";
-import { SectionTabs } from "../../../components/section-tabs";
+import { AppShell } from "../../../../components/app-shell";
+import { SectionTabs } from "../../../../components/section-tabs";
 import {
-  createWorkLog,
+  getWorkLog,
+  updateWorkLog,
   getEmployees,
   getLands,
   getVehicles,
   type Employee,
   type Land,
   type Vehicle
-} from "../../../lib/api";
-import { clearStoredSession } from "../../../lib/session";
-import { useProtectedSession } from "../../../lib/use-protected-session";
+} from "../../../../lib/api";
+import { clearStoredSession } from "../../../../lib/session";
+import { useProtectedSession } from "../../../../lib/use-protected-session";
 
 const tabs = [
   { href: "/dashboard", label: "Dashboard" },
@@ -41,8 +42,9 @@ const initialForm = {
   notes: ""
 };
 
-export default function AddWorkLogPage() {
+export default function EditWorkLogPage() {
   const router = useRouter();
+  const params = useParams();
   const { loading, session } = useProtectedSession();
   const [lands, setLands] = useState<Land[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -50,25 +52,48 @@ export default function AddWorkLogPage() {
   const [form, setForm] = useState(initialForm);
   const [pageError, setPageError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  const worklogId = params?.id as string;
 
   useEffect(() => {
-    if (!session) return;
+    if (!session || !worklogId) return;
     const loadData = async () => {
       try {
-        const [landItems, employeeItems, vehicleItems] = await Promise.all([
+        const [landItems, employeeItems, vehicleItems, worklogData] = await Promise.all([
           getLands(session.token),
           getEmployees(session.token),
-          getVehicles(session.token)
+          getVehicles(session.token),
+          getWorkLog(session.token, worklogId)
         ]);
         setLands(landItems);
         setEmployees(employeeItems);
         setVehicles(vehicleItems);
+
+        setForm({
+          workDate: worklogData.workDate || "",
+          landId: worklogData.landId || "",
+          supervisorId: worklogData.supervisorId || "",
+          vehicleId: worklogData.vehicleId || "",
+          coconutCount: String(worklogData.coconutCount || "0"),
+          bagCount: String(worklogData.bagCount || "0"),
+          workerIds: worklogData.assignments?.map(a => a.employeeId) || [],
+          latitude: worklogData.latitude ? String(worklogData.latitude) : "",
+          longitude: worklogData.longitude ? String(worklogData.longitude) : "",
+          startTime: worklogData.startTime || "",
+          endTime: worklogData.endTime || "",
+          loadType: worklogData.loadType || "",
+          transportCost: worklogData.transportCost ? String(worklogData.transportCost) : "",
+          location: worklogData.location || "",
+          notes: worklogData.notes || ""
+        });
+        setDataLoaded(true);
       } catch (error) {
         setPageError(error instanceof Error ? error.message : "Unable to load reference data");
       }
     };
     void loadData();
-  }, [session]);
+  }, [session, worklogId]);
 
   const handleLogout = () => {
     clearStoredSession();
@@ -86,12 +111,12 @@ export default function AddWorkLogPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!session) return;
+    if (!session || !worklogId) return;
     setSaving(true);
     setPageError("");
 
     try {
-      await createWorkLog(session.token, {
+      await updateWorkLog(session.token, worklogId, {
         workDate: form.workDate,
         landId: form.landId,
         supervisorId: form.supervisorId || undefined,
@@ -116,15 +141,15 @@ export default function AddWorkLogPage() {
     }
   };
 
-  if (loading || !session) {
-    return <main className="loading-screen">Checking your session...</main>;
+  if (loading || !session || !dataLoaded) {
+    return <main className="loading-screen">Loading...</main>;
   }
 
   return (
     <AppShell
       active="worklogs"
-      heading="Add Work Log"
-      description="Capture the daily harvesting job details."
+      heading="Edit Work Log"
+      description="Update the daily harvesting job details."
       userName={session.user.name}
       userRole={session.user.role}
       onLogout={handleLogout}
@@ -244,7 +269,7 @@ export default function AddWorkLogPage() {
           </div>
 
           <button className="primary-button form-span-two" type="submit" disabled={saving}>
-            {saving ? "Saving work log..." : "Save work log"}
+            {saving ? "Saving work log..." : "Update work log"}
           </button>
         </form>
       </article>

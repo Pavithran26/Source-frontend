@@ -192,9 +192,9 @@ export default function LandsPage() {
                   <Link href={`/lands/${land.id}`} className="secondary-button table-button" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem" }} title="Payment Ledger">
                     <FaBook size={16} />
                   </Link>
-                  <button className="secondary-button table-button" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem" }}>
+                  <Link href={`/lands/${land.id}/edit`} className="secondary-button table-button" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "0.5rem" }}>
                     <FaEdit size={16} />
-                  </button>
+                  </Link>
                   <button
                     className="danger-button table-button"
                     type="button"

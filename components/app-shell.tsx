@@ -112,7 +112,7 @@ export function AppShell({
           </button>
 
           <div style={{ marginTop: "1rem", fontSize: "11px", textAlign: "center", color: "var(--text-muted)", lineHeight: "1.4" }}>
-            This Software Developed and Managed by{" "}
+            This Software is Developed and Managed by{" "}
             <a href="https://github.com/Pavithran26" target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand-primary)", textDecoration: "underline" }}>
               Pavithran S
             </a>

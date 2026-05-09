@@ -1,5 +1,8 @@
 const nextConfig = {
-  reactStrictMode: true
+  reactStrictMode: true,
+  experimental: {
+    allowedDevOrigins: ["192.168.216.41", "localhost:3000"]
+  }
 };
 
 export default nextConfig;

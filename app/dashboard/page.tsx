@@ -10,6 +10,7 @@ import { FinancialOverview } from "../../components/financial-overview";
 import { LandProductionDonut } from "../../components/charts/land-production-donut";
 import { Leaderboard, type LeaderboardItem } from "../../components/leaderboard";
 import { QuickActions } from "../../components/quick-actions";
+import { RealtimeFieldUpdates } from "../../components/realtime-field-updates";
 
 import {
   getDashboardSummary,
@@ -156,6 +157,7 @@ export default function DashboardPage() {
         </div>
 
         <div style={{ display: "grid", gap: "18px", alignContent: "start" }}>
+          <RealtimeFieldUpdates />
           <QuickActions items={quickActionItems} />
         </div>
       </section>

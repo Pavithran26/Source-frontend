@@ -231,11 +231,21 @@ type LegacyEnvelope<T> = {
   data: T;
 };
 
-const configuredBase =
-  process.env.NEXT_PUBLIC_API_BASE_URL ??
-  (process.env.NODE_ENV === "development"
-    ? "http://127.0.0.1:8000/api"
-    : "https://source-backend-django.vercel.app/api");
+const DEV_API_BASE = "http://127.0.0.1:8000/api";
+const PROD_API_BASE = "https://source-backend-django.vercel.app/api";
+
+function resolveConfiguredApiBase(): string {
+  const raw = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() ?? "";
+  const fallback = process.env.NODE_ENV === "development" ? DEV_API_BASE : PROD_API_BASE;
+  let base = raw || fallback;
+  // Empty env on Vercel is "" (still set); relative values break fetch (same-origin → Next, often 403/404).
+  if (!/^https?:\/\//i.test(base)) {
+    base = fallback;
+  }
+  return base.replace(/\/+$/, "");
+}
+
+const configuredBase = resolveConfiguredApiBase();
 
 const legacyApiBaseUrl = configuredBase.endsWith("/api/v1") ? configuredBase.replace(/\/v1$/, "") : configuredBase;
 const apiBaseUrl = configuredBase.endsWith("/api/v1")

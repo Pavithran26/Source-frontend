@@ -111,12 +111,6 @@ export function AppShell({
             <span>Log out</span>
           </button>
 
-          <div style={{ marginTop: "1rem", fontSize: "11px", textAlign: "center", color: "var(--text-muted)", lineHeight: "1.4" }}>
-            This Software is Developed and Managed by{" "}
-            <a href="https://github.com/Pavithran26" target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand-primary)", textDecoration: "underline" }}>
-              Pavithran S
-            </a>
-          </div>
         </div>
       </aside>
 
@@ -169,6 +163,15 @@ export function AppShell({
         </section>
 
         {children}
+
+        <footer className="workspace-footer">
+          <p>
+            This Software is Developed and Managed by{" "}
+            <a href="https://github.com/Pavithran26" target="_blank" rel="noopener noreferrer">
+              Pavithran S
+            </a>
+          </p>
+        </footer>
       </section>
     </main>
   );

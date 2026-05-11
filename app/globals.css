@@ -490,6 +490,30 @@ textarea {
   gap: 18px;
 }
 
+.workspace-footer {
+  margin-top: 2rem;
+  padding: 20px 0;
+  text-align: center;
+  border-top: 1px solid var(--line);
+}
+
+.workspace-footer p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.workspace-footer a {
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.workspace-footer a:hover {
+  color: var(--brand-deep);
+}
+
 .workspace-topbar,
 .workspace-hero,
 .panel-card {

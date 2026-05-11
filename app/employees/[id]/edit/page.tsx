@@ -3,12 +3,12 @@
 import { startTransition, useEffect, useState, type FormEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-import { AppShell } from "../../../../components/app-shell";
-import { EmployeeForm, type EmployeeFormValues } from "../../../../components/employee-form";
-import { SectionTabs } from "../../../../components/section-tabs";
-import { getEmployee, updateEmployee } from "../../../../lib/api";
-import { clearStoredSession } from "../../../../lib/session";
-import { useProtectedSession } from "../../../../lib/use-protected-session";
+import { AppShell } from "@/components/app-shell";
+import { EmployeeForm, type EmployeeFormValues } from "@/components/employee-form";
+import { SectionTabs } from "@/components/section-tabs";
+import { getEmployee, updateEmployee } from "@/lib/api";
+import { clearStoredSession } from "@/lib/session";
+import { useProtectedSession } from "@/lib/use-protected-session";
 
 const initialForm: EmployeeFormValues = {
   employeeCode: "",

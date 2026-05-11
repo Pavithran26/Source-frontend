@@ -4,16 +4,16 @@ import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { AppShell } from "../../components/app-shell";
-import { EmptyState } from "../../components/empty-state";
-import { ListControls } from "../../components/list-controls";
-import { SectionTabs } from "../../components/section-tabs";
-import { deleteStore, getStores, type Store } from "../../lib/api";
-import { clearStoredSession } from "../../lib/session";
-import { useListFilters } from "../../lib/use-list-filters";
-import { useProtectedSession } from "../../lib/use-protected-session";
-import { ConfirmModal } from "../../components/confirm-modal";
-import { DataTable } from "../../components/data-table";
+import { AppShell } from "@/components/app-shell";
+import { EmptyState } from "@/components/empty-state";
+import { ListControls } from "@/components/list-controls";
+import { SectionTabs } from "@/components/section-tabs";
+import { deleteStore, getStores, type Store } from "@/lib/api";
+import { clearStoredSession } from "@/lib/session";
+import { useListFilters } from "@/lib/use-list-filters";
+import { useProtectedSession } from "@/lib/use-protected-session";
+import { ConfirmModal } from "@/components/confirm-modal";
+import { DataTable } from "@/components/data-table";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 const storeTabs = [

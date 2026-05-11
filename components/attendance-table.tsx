@@ -1,4 +1,4 @@
-import type { AttendanceRecord } from "../lib/api";
+import type { AttendanceRecord } from "@/lib/api";
 
 type AttendanceTableProps = {
   records: AttendanceRecord[];

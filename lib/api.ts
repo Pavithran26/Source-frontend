@@ -494,7 +494,7 @@ function mapStore(item: Record<string, unknown>): Store {
     location: String(item.location ?? ""),
     currentCoconuts: Number(item.current_coconuts ?? 0),
     currentBags: Number(item.current_bags ?? 0),
-    isActive: Boolean(item.is_active ?? True),
+    isActive: Boolean(item.is_active ?? true),
     notes: String(item.notes ?? "")
   };
 }

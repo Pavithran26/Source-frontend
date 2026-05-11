@@ -3,8 +3,8 @@
 import { startTransition, useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
-import { AppShell } from "../../../components/app-shell";
-import { SectionTabs } from "../../../components/section-tabs";
+import { AppShell } from "@/components/app-shell";
+import { SectionTabs } from "@/components/section-tabs";
 import {
   createBuyer,
   createSalesEntry,
@@ -14,9 +14,9 @@ import {
   type Buyer,
   type Land,
   type WorkLog
-} from "../../../lib/api";
-import { clearStoredSession } from "../../../lib/session";
-import { useProtectedSession } from "../../../lib/use-protected-session";
+} from "@/lib/api";
+import { clearStoredSession } from "@/lib/session";
+import { useProtectedSession } from "@/lib/use-protected-session";
 
 const tabs = [
   { href: "/dashboard", label: "Dashboard" },

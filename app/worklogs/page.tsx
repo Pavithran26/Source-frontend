@@ -4,20 +4,20 @@ import { startTransition, useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-import { AppShell } from "../../components/app-shell";
-import { EmptyState } from "../../components/empty-state";
-import { SectionTabs } from "../../components/section-tabs";
+import { AppShell } from "@/components/app-shell";
+import { EmptyState } from "@/components/empty-state";
+import { SectionTabs } from "@/components/section-tabs";
 import {
   getWorkLogs,
   deleteWorkLog,
   type WorkLog
-} from "../../lib/api";
-import { clearStoredSession } from "../../lib/session";
-import { ListControls } from "../../components/list-controls";
-import { useListFilters } from "../../lib/use-list-filters";
-import { useProtectedSession } from "../../lib/use-protected-session";
-import { ConfirmModal } from "../../components/confirm-modal";
-import { DataTable, type ColumnDef } from "../../components/data-table";
+} from "@/lib/api";
+import { clearStoredSession } from "@/lib/session";
+import { ListControls } from "@/components/list-controls";
+import { useListFilters } from "@/lib/use-list-filters";
+import { useProtectedSession } from "@/lib/use-protected-session";
+import { ConfirmModal } from "@/components/confirm-modal";
+import { DataTable, type ColumnDef } from "@/components/data-table";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 const tabs = [

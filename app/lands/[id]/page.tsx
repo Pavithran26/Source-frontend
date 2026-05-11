@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaTrash } from "react-icons/fa";
 
-import { AppShell } from "../../../components/app-shell";
-import { EmptyState } from "../../../components/empty-state";
-import { ConfirmModal } from "../../../components/confirm-modal";
+import { AppShell } from "@/components/app-shell";
+import { EmptyState } from "@/components/empty-state";
+import { ConfirmModal } from "@/components/confirm-modal";
 import {
   getLand,
   getLandPayments,
@@ -15,10 +15,10 @@ import {
   deleteLandPayment,
   type Land,
   type LandLeasePayment
-} from "../../../lib/api";
-import { clearStoredSession } from "../../../lib/session";
-import { useProtectedSession } from "../../../lib/use-protected-session";
-import { DataTable } from "../../../components/data-table";
+} from "@/lib/api";
+import { clearStoredSession } from "@/lib/session";
+import { useProtectedSession } from "@/lib/use-protected-session";
+import { DataTable } from "@/components/data-table";
 
 const initialPaymentForm = {
   paymentDate: "",

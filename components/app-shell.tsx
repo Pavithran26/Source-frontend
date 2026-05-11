@@ -6,7 +6,7 @@ import Link from "next/link";
 import { BrandLogo } from "./brand-logo";
 import { ThemeToggle } from "./theme-toggle";
 import { UiIcon, type IconName } from "./ui-icon";
-import { getStoredSession } from "../lib/session";
+import { getStoredSession } from "@/lib/session";
 
 type AppShellSection = "dashboard" | "lands" | "employees" | "vehicles" | "worklogs" | "sales" | "attendance" | "stores" | "grns";
 

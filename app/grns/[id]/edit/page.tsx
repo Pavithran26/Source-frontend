@@ -3,11 +3,11 @@
 import { startTransition, useEffect, useState, type FormEvent } from "react";
 import { useRouter, useParams } from "next/navigation";
 
-import { AppShell } from "../../../../components/app-shell";
-import { SectionTabs } from "../../../../components/section-tabs";
-import { updateGRN, getGRNs, getStores, getWorkLogs, getVehicles, type Store, type WorkLog, type Vehicle } from "../../../../lib/api";
-import { clearStoredSession } from "../../../../lib/session";
-import { useProtectedSession } from "../../../../lib/use-protected-session";
+import { AppShell } from "@/components/app-shell";
+import { SectionTabs } from "@/components/section-tabs";
+import { updateGRN, getGRNs, getStores, getWorkLogs, getVehicles, type Store, type WorkLog, type Vehicle } from "@/lib/api";
+import { clearStoredSession } from "@/lib/session";
+import { useProtectedSession } from "@/lib/use-protected-session";
 
 const tabs = [
   { href: "/dashboard", label: "Dashboard" },

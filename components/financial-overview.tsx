@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   Legend
 } from "recharts";
-import type { ProfitLossReport } from "../lib/api";
+import type { ProfitLossReport } from "@/lib/api";
 
 export function FinancialOverview({ report }: { report: ProfitLossReport }) {
   return (

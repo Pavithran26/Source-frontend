@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 
-import { ThemeProvider } from "../components/theme-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 const uiFont = Manrope({

@@ -4,10 +4,10 @@ import { startTransition, useState, type FormEvent, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FaUser, FaCamera, FaKey } from "react-icons/fa";
 
-import { AppShell } from "../../components/app-shell";
-import { updateProfile } from "../../lib/api";
-import { clearStoredSession } from "../../lib/session";
-import { useProtectedSession } from "../../lib/use-protected-session";
+import { AppShell } from "@/components/app-shell";
+import { updateProfile } from "@/lib/api";
+import { clearStoredSession } from "@/lib/session";
+import { useProtectedSession } from "@/lib/use-protected-session";
 
 export default function ProfilePage() {
   const router = useRouter();

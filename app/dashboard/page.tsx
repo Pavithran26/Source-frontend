@@ -4,13 +4,13 @@ import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { AppShell } from "../../components/app-shell";
-import { StatsCard } from "../../components/stats-card";
-import { FinancialOverview } from "../../components/financial-overview";
-import { LandProductionDonut } from "../../components/charts/land-production-donut";
-import { Leaderboard, type LeaderboardItem } from "../../components/leaderboard";
-import { QuickActions } from "../../components/quick-actions";
-import { RealtimeFieldUpdates } from "../../components/realtime-field-updates";
+import { AppShell } from "@/components/app-shell";
+import { StatsCard } from "@/components/stats-card";
+import { FinancialOverview } from "@/components/financial-overview";
+import { LandProductionDonut } from "@/components/charts/land-production-donut";
+import { Leaderboard, type LeaderboardItem } from "@/components/leaderboard";
+import { QuickActions } from "@/components/quick-actions";
+import { RealtimeFieldUpdates } from "@/components/realtime-field-updates";
 
 import {
   getDashboardSummary,
@@ -21,9 +21,9 @@ import {
   type EmployeeWorkReportItem,
   type LandProductionReportItem,
   type ProfitLossReport
-} from "../../lib/api";
-import { clearStoredSession } from "../../lib/session";
-import { useProtectedSession } from "../../lib/use-protected-session";
+} from "@/lib/api";
+import { clearStoredSession } from "@/lib/session";
+import { useProtectedSession } from "@/lib/use-protected-session";
 
 const emptySummary: DashboardSummary = {
   totalLands: 0,
@@ -44,13 +44,13 @@ const quickActionItems = [
     title: "Add Work Log",
     description: "Capture daily harvest and worker assignments",
     icon: "workflow" as const,
-    href: "/worklogs/new"
+    href: "/worklogs/add"
   },
   {
     title: "Record Sales",
     description: "Enter revenue from coconut buyers",
     icon: "sales" as const,
-    href: "/sales/new"
+    href: "/sales/add"
   },
   {
     title: "Manage Lands",

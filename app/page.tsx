@@ -3,14 +3,14 @@
 import { startTransition, useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
-import { BrandLogo } from "../components/brand-logo";
-import { login } from "../lib/api";
-import { getStoredSession, isSessionExpired, setStoredSession } from "../lib/session";
+import { BrandLogo } from "@/components/brand-logo";
+import { login } from "@/lib/api";
+import { getStoredSession, isSessionExpired, setStoredSession } from "@/lib/session";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("Hello");
-  const [password, setPassword] = useState("@Pavi4624");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 

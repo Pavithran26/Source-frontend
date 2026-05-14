@@ -19,12 +19,15 @@ export const metadata = {
   title: "SRK Coconut ERP",
   description: "Operations dashboard for coconut harvesting and trading",
   manifest: "/manifest.json",
-  themeColor: "#0F172A",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "SRK ERP",
   },
+};
+
+export const viewport = {
+  themeColor: "#0F172A",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
